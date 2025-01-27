@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 import 'package:chat_app/features/auth/data/repo/auth_repo.dart';
 import 'package:chat_app/features/auth/data/repo/auth_repo_impl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -11,7 +10,7 @@ class AuthCubit extends Cubit<AuthState> {
   final AuthRepo _authRepo = AuthRepoImpl();
   User? userCredential;
 
-  void Register(
+  void register(
       {required String email,
       required String password,
       required String name}) async {
@@ -28,7 +27,7 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  void Login({required String email, required String password}) async {
+  void login({required String email, required String password}) async {
     emit(AuthLoading());
     try {
       userCredential = await _authRepo.login(

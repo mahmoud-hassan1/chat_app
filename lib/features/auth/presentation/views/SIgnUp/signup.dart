@@ -1,14 +1,14 @@
 import 'package:chat_app/Constants/constants.dart';
 import 'package:chat_app/features/auth/presentation/Cupits/auth/auth_cubit.dart';
-import 'package:chat_app/Screens/Home/home.dart';
-import 'package:chat_app/features/auth/presentation/views/Login/Components/CustomButton.dart';
+import 'package:chat_app/Screens/Home/chat_screen.dart';
+import 'package:chat_app/features/auth/presentation/views/Login/Components/customButton.dart';
 import 'package:chat_app/features/auth/presentation/views/Login/Components/custom_textform_field.dart';
-import 'package:chat_app/features/auth/presentation/views/Login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
+// ignore: must_be_immutable
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
   String email = "", password = "", name = "";
@@ -87,7 +87,7 @@ class SignUpScreen extends StatelessWidget {
                             width: width,
                             height: height,
                             onTap: () {
-                              BlocProvider.of<AuthCubit>(context).Register(
+                              BlocProvider.of<AuthCubit>(context).register(
                                   name: name, email: email, password: password);
                             }),
                         SizedBox(

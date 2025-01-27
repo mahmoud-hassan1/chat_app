@@ -1,3 +1,4 @@
+import 'package:chat_app/Screens/Home/chat_screen.dart';
 import 'package:chat_app/features/auth/presentation/Cupits/auth/auth_cubit.dart';
 import 'package:chat_app/features/auth/presentation/views/Login/login.dart';
 import 'package:chat_app/firebase_options.dart';
@@ -50,7 +51,9 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          home: LoginScreen(),
+          home: Supabase.instance.client.auth.currentUser != null
+              ? Home()
+              : LoginScreen(),
           debugShowCheckedModeBanner: false,
         ),
       ),
