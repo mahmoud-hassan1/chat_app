@@ -1,14 +1,19 @@
-import 'package:chat_app/Cupits/auth/auth_cubit.dart';
-import 'package:chat_app/Screens/Login/login.dart';
+import 'package:chat_app/features/auth/presentation/Cupits/auth/auth_cubit.dart';
+import 'package:chat_app/features/auth/presentation/views/Login/login.dart';
 import 'package:chat_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Supabase.initialize(
+      anonKey:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind2d2FlZ2hpbHpteXVpaW95bmZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc5Mzg5NTMsImV4cCI6MjA1MzUxNDk1M30.M9rjbEfXesbphCsRrMGV1OvWTPOjOY53Qzi3V0vBrqk",
+      url: "https://wvwaeghilzmyuiioynfe.supabase.co");
   runApp(const MyApp());
 }
 
