@@ -42,6 +42,7 @@ dependencies:
   bloc: ^8.1.4
   cloud_firestore: ^5.0.1
   modal_progress_hud_nsn: ^0.5.1
+  dartz: ^0.10.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
