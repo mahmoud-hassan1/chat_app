@@ -1,20 +1,34 @@
 import 'package:chat_app/core/constants.dart';
 import 'package:chat_app/core/widgets/snackbar.dart';
-import 'package:chat_app/features/auth/presentation/cupits/auth/auth_cubit.dart';
+import 'package:chat_app/features/auth/presentation/cubits/auth/auth_cubit.dart';
+import 'package:chat_app/features/home/presentation/views/chats_view/chats_screen.dart';
 import 'package:chat_app/features/home/presentation/views/home/home.dart';
 import 'package:chat_app/features/auth/presentation/views/login/components/custom_button.dart';
 import 'package:chat_app/features/auth/presentation/views/login/components/custom_textform_field.dart';
 import 'package:chat_app/features/auth/presentation/views/sIgn%20up/signup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 // ignore: must_be_immutable
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   String email = "", password = "";
+
   bool isloading=false;
+  @override
+  void initState() {
+    FirebaseAuth.instance.currentUser != null ? context.read<AuthCubit>().getCurrentUser() : null;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -23,7 +37,7 @@ class LoginScreen extends StatelessWidget {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccess) {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home(),));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const ChatsScreen(),));
         }
         else if (state is AuthLoading) {
          isloading =true;
@@ -31,6 +45,10 @@ class LoginScreen extends StatelessWidget {
          isloading =false;
          showSnackBar(context, state.exception);
         }
+        else {
+          isloading =false;
+        }
+      
       },
       builder: (context, state) {
         return ModalProgressHUD(

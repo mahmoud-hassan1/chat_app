@@ -1,6 +1,6 @@
 import 'package:chat_app/core/constants.dart';
 import 'package:chat_app/core/widgets/snackbar.dart';
-import 'package:chat_app/features/auth/presentation/cupits/auth/auth_cubit.dart';
+import 'package:chat_app/features/auth/presentation/cubits/auth/auth_cubit.dart';
 import 'package:chat_app/features/home/presentation/views/home/home.dart';
 import 'package:chat_app/features/auth/presentation/views/login/components/custom_button.dart';
 import 'package:chat_app/features/auth/presentation/views/login/components/custom_textform_field.dart';
@@ -20,7 +20,7 @@ class SignUpScreen extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (BuildContext context, AuthState state) { 
-        if (state is AuthSuccess) {
+        if (state is RegisterSuccess) {
           showSnackBar(context, 'Verification Link Sent to Email Please Verify Your Email',color: Colors.green);
           Navigator.pop(context);
         }

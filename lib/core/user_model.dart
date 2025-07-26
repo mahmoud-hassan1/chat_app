@@ -16,7 +16,6 @@ class UserModel {
     return {
       'name': name,
       'email': email,
-      'id': id,
     };
   }
 

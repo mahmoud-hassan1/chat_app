@@ -13,7 +13,7 @@ class AuthCubit extends Cubit<AuthState> {
     final result=await authRepo.register(email: email, password: password, name: name);
     result.fold(
       (failure) => emit(AuthFail(failure.message)),
-      (success) => emit(AuthSuccess()),
+      (success) => emit(RegisterSuccess()),
     );
   }
     void login({required String email,required String password})async{
@@ -24,5 +24,20 @@ class AuthCubit extends Cubit<AuthState> {
       (success) => emit(AuthSuccess()),
     );
   }
+  void logout()async{
+    emit(AuthLoading());
+    final result=await authRepo.logout();
+    result.fold(
+      (failure) => emit(AuthFail(failure.message)),
+      (success) => emit(LogoutSuccess()),
+    );
+  }
+  void getCurrentUser()async{
+    emit(AuthLoading());
+    final result=await authRepo.getCurrentUser();
+    result.fold(
+      (failure) => emit(GetCurrentUserFailed()),
+      (success) => emit(AuthSuccess()),
+    );
+  }
 }
-
