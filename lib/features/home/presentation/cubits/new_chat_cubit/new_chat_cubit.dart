@@ -18,72 +18,50 @@ class NewChatCubit extends Cubit<NewChatState> {
   bool isLoadingMore = false;
   String currentQuery = '';
   
-  Future<void> searchUsers(String query) async {
+  Future<void> searchUsers(String query, {bool refresh = false}) async {
     // Update current query
     currentQuery = query;
+    print('currentQuery: $currentQuery');
+   
+    if (!refresh) {
+        
     
-    // Reset pagination state for new search
+    if (!hasMoreData || isLoadingMore || users.isEmpty || query.isEmpty) return;
+    
+    isLoadingMore = true;
+    emit(NewChatSearchLoadingMore(users: users));
+    }
+    else{
+       // Reset pagination state for new search
+       print('resetting pagination state');
     lastDocument = null;
     hasMoreData = true;
-    users.clear();
+    users = [];
     isLoadingMore = false;
-    
     emit(NewChatSearchLoading());
+    }
     
     try {
-      final result = await newChatRepo.searchUsers(query);
+      final result = await newChatRepo.searchUsers(query,lastDocument: lastDocument);
       if (result.isSuccess) {
         final searchResult = result.value;
-        users = searchResult.users;
+        users.addAll( searchResult.users);
         lastDocument = searchResult.lastDocument;
         hasMoreData = searchResult.users.length >= 9;
         emit(NewChatSearchSuccess(users: users));
       } else {
-        emit(NewChatSearchFailure(error: result.errorMessage));
+        if (refresh){
+          emit(NewChatSearchSuccess(users: users));
+        }
+        else{
+          emit(NewChatSearchFailure(error: result.errorMessage));
+        }
       }
     } catch (e) {
       emit(NewChatSearchFailure(error: e.toString()));
     }
   }
 
-  Future<void> loadMoreUsers([String? query]) async {
-    // Use provided query or current query
-    final searchQuery = query ?? currentQuery;
-    
-    if (!hasMoreData || isLoadingMore || users.isEmpty || searchQuery.isEmpty) return;
-    
-    isLoadingMore = true;
-    emit(NewChatSearchLoadingMore(users: users));
-    
-    try {
-      final result = await newChatRepo.searchUsers(searchQuery, lastDocument: lastDocument);
-      if (result.isSuccess) {
-        final searchResult = result.value;
-        if (searchResult.users.isNotEmpty) {
-          // Add new users to existing list
-          users.addAll(searchResult.users);
-          lastDocument = searchResult.lastDocument;
-          hasMoreData = searchResult.users.length >= 9;
-          emit(NewChatSearchSuccess(users: users));
-        } else {
-          hasMoreData = false;
-          emit(NewChatSearchSuccess(users: users));
-        }
-      } else {
-        // On pagination error, don't fail completely - just stop loading more
-        print('Pagination error: ${result.errorMessage}');
-        hasMoreData = false;
-        emit(NewChatSearchSuccess(users: users));
-      }
-    } catch (e) {
-      // On pagination error, don't fail completely - just stop loading more
-      print('Pagination exception: $e');
-      hasMoreData = false;
-      emit(NewChatSearchSuccess(users: users));
-    } finally {
-      isLoadingMore = false;
-    }
-  }
 
   Future<void> createChat(UserModel user) async {
     emit(NewChatLoading());
@@ -112,7 +90,7 @@ class NewChatCubit extends Cubit<NewChatState> {
     // Load more when user is within 200 pixels of bottom
     if (pixels >= maxScrollExtent - 200 && canLoadMore) {
       print('loading more users');
-      loadMoreUsers();
+      searchUsers(currentQuery);
     }
   }
 }

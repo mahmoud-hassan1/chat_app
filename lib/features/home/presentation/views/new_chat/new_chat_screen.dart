@@ -13,6 +13,7 @@ class NewChatScreen extends StatefulWidget {
 class _NewChatScreenState extends State<NewChatScreen> {
   Timer? _debounce;
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -41,7 +42,7 @@ class _NewChatScreenState extends State<NewChatScreen> {
     
     // Set up new debounce timer
     _debounce = Timer(const Duration(milliseconds: 300), () {
-      context.read<NewChatCubit>().searchUsers(value);
+      context.read<NewChatCubit>().searchUsers(value,refresh: true);
     });
   }
 
@@ -60,6 +61,7 @@ class _NewChatScreenState extends State<NewChatScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  controller: _searchController,
                   onChanged: _onSearchChanged,
                   decoration: const InputDecoration(
                     hintText: 'Search with name or email',
